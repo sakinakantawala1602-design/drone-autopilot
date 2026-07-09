@@ -21,3 +21,12 @@ class DroneState:
 
         self.vz=self.vz + az * dt
         self.z=self.z + self.vz * dt
+
+    def speed(self):
+        speed = (self.vx**2 + self.vy**2 + self.vz**2) ** 0.5 
+        '''cannot be self.speed,
+            cuz then it would store the value on 
+            the vairable and is no longer a local variable and 
+            dron.speed would also deem the function call useless after one run of code'''
+        return speed
+        
