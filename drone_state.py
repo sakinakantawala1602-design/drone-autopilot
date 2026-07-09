@@ -1,6 +1,6 @@
 
 class DroneState:
-    def __init__(self, x, y, z, vx, vy, vz):
+    def __init__(self, x, y, z, vx, vy, vz,name):
         # store each parameter as self.something
         self.x=x
         self.y=y
@@ -8,6 +8,7 @@ class DroneState:
         self.vx=vx
         self.vy=vy
         self.vz=vz
+        self.name=name
 
 
     def update(self, ax, ay, az, dt):
