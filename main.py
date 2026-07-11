@@ -6,11 +6,15 @@ if __name__ == "__main__":    #checks if the file is being excecuted directly or
     drone3 = DroneState(0, 1, 0, 1, 0, 0,'Drone C')
     drones_list=[drone1,drone2,drone3]
     for drone in drones_list:
+        drone.wz=10
         drone.update(ax=1, ay=0, az=0, dt=1)
         speed= drone.speed()
         print(drone.name,drone.x, drone.y, drone.z, drone.vx, drone.vy, drone.vz)
         print(speed)
-
+        print(drone.yaw)
+        
+        drone.update(ax=1, ay=0, az=0, dt=1)
+        print(drone.yaw)
 
 
     

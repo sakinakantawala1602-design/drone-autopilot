@@ -1,6 +1,6 @@
 
 class DroneState:
-    def __init__(self, x, y, z, vx, vy, vz,name):
+    def __init__(self, x, y, z, vx, vy, vz,name='Unnamed',roll=0, pitch=0, yaw=0, wx=0, wy=0, wz=0 ):
         # store each parameter as self.something
         self.x=x
         self.y=y
@@ -9,11 +9,18 @@ class DroneState:
         self.vy=vy
         self.vz=vz
         self.name=name
+        self.roll=roll
+        self.pitch=pitch
+        self.yaw=yaw
+        self.wx=wx
+        self.wy=wy
+        self.wz=wz
 
 
     def update(self, ax, ay, az, dt):
         # 1. update velocity using acceleration and dt
         # 2. update position using the (new) velocity and dt
+        # 3. update roll, pitch and yaw using angular veclocity
         self.vx=self.vx + ax * dt
         self.x=self.x + self.vx * dt
 
@@ -23,6 +30,10 @@ class DroneState:
         self.vz=self.vz + az * dt
         self.z=self.z + self.vz * dt
 
+        self.roll=self.roll + self.wx * dt
+        self.pitch=self.pitch + self.wy * dt
+        self.yaw=self.yaw + self.wz * dt
+
     def speed(self):
         speed = (self.vx**2 + self.vy**2 + self.vz**2) ** 0.5 
         '''cannot be self.speed,
@@ -30,4 +41,6 @@ class DroneState:
             the vairable and is no longer a local variable and 
             dron.speed would also deem the function call useless after one run of code'''
         return speed
+    
+    
         
