@@ -18,14 +18,14 @@ from pid_controller import PIDController
         print(drone.yaw)'''
 
 
-target = 10  # meters
+target = 50  # meters
 m = 1  # kg
 g = 9.8
 
 drone = DroneState(0, 0, 0, 0, 0, 0, "TestDrone")
-pid = PIDController(Kp=2 , Ki=1, Kd=1)
+pid = PIDController(Kp=2 , Ki=1, Kd=1, integral_limit=10)
 
-for step in range(5000):  # simulate 50 time steps
+for step in range(10000):  # simulate 50 time steps
     error = target - drone.z
     command = pid.compute(error, dt=0.01)
     az = g + command/m
