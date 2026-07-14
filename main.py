@@ -1,5 +1,7 @@
 from drone_state import DroneState
 from pid_controller import PIDController
+from kalman_filter import KalmanFilter
+
 
 '''if __name__ == "__main__":    #checks if the file is being excecuted directly or is imported and excecuted in another file
     drone1 = DroneState(0, 0, 0, 0, 0, 0,'Drone A')
@@ -15,7 +17,7 @@ from pid_controller import PIDController
         print(drone.yaw)
         
         drone.update(ax=1, ay=0, az=0, dt=1)
-        print(drone.yaw)'''
+        print(drone.yaw)
 
 
 target = 50  # meters
@@ -31,4 +33,16 @@ for step in range(10000):  # simulate 50 time steps
     az = g + command/m
     drone.update(ax=0, ay=0, az=az, dt=0.01)
     if step%100==0:
-        print(step, drone.z)    
+        print(step, drone.z)'''
+
+kf = KalmanFilter(estimate=0, variance=1, process_noise=0.01)
+
+# Step 1: predict, then update with a noisy measurement
+kf.predict(velocity=1, dt=1)
+kf.update(measurement=0.9, measurement_variance=0.5)
+print(kf.estimate, kf.variance)
+
+# Step 2: predict again, then update with another noisy measurement
+kf.predict(velocity=1, dt=1)
+kf.update(measurement=2.2, measurement_variance=0.5)
+print(kf.estimate, kf.variance)
