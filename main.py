@@ -33,7 +33,7 @@ for step in range(10000):  # simulate 50 time steps
     az = g + command/m
     drone.update(ax=0, ay=0, az=az, dt=0.01)
     if step%100==0:
-        print(step, drone.z)'''
+        print(step, drone.z)
 
 kf = KalmanFilter(estimate=0, variance=1, process_noise=0.01)
 
@@ -45,4 +45,23 @@ print(kf.estimate, kf.variance)
 # Step 2: predict again, then update with another noisy measurement
 kf.predict(velocity=1, dt=1)
 kf.update(measurement=2.2, measurement_variance=0.5)
-print(kf.estimate, kf.variance)
+print(kf.estimate, kf.variance)'''
+
+import random
+from drone_state import DroneState
+from kalman_filter import KalmanFilter
+
+drone = DroneState(0, 0, 0, 0, 0, 1, "TrueDrone")  # vz=1, climbing steadily
+kf = KalmanFilter(estimate=0, variance=1, process_noise=0.01)
+
+sensor_sd = 3  # how noisy our simulated GPS is
+
+for step in range(20):
+    drone.update(ax=0, ay=0, az=0, dt=1)  # true physics: climbs at constant vz=1
+    
+    kf.predict(velocity=drone.vz, dt=1)
+    
+    noisy_measurement = random.gauss(drone.z, sensor_sd)
+    kf.update(measurement=noisy_measurement, measurement_variance=sensor_sd**2)
+    
+    print(f"true_z={drone.z:.2f}, noisy_measurement={noisy_measurement:.2f}, kf_estimate={kf.estimate:.2f}")
