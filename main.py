@@ -72,13 +72,17 @@ drone = DroneState(0, 0, 0, 0, 0, 0, "AutopilotDrone")
 pid = PIDController(Kp=2, Ki=1, Kd=1, integral_limit=8)
 kf = KalmanFilter(estimate=0, variance=1, process_noise=0.01)
 
-target = 10
 m = 1
 g = 9.8
 sensor_sd = 0.5
 dt = 0.01
+waypoints = [10, 20, 5]
+current_index = 0
+target = waypoints[current_index]
+tolerance = 1.0
 
-for step in range(2000):
+
+for step in range(6000):
     # 1. SENSE: noisy measurement of drone.z
     noisy_measurement = random.gauss(drone.z, sensor_sd)
     # 2. ESTIMATE: kf.predict(...) using drone.vz, then kf.update(...) with the noisy measurement
@@ -86,6 +90,13 @@ for step in range(2000):
     kf.update(measurement=noisy_measurement, measurement_variance=sensor_sd**2)
     # 3. DECIDE: error = target - kf.estimate (NOT drone.z!), then pid.compute(...)
     error = target - kf.estimate
+    tolerance=1
+    if abs(error)<tolerance:
+        if current_index+1 < len(waypoints):
+            current_index+=1
+        target = waypoints[current_index]
+
+
     command = pid.compute(error, dt)
 
     # 4. Convert command to az
@@ -93,5 +104,5 @@ for step in range(2000):
     # 5. ACT: drone.update(...)
     drone.update(ax=0, ay=0, az=az, dt=dt)
     
-    if step % 100 == 0:
-        print(f"true_z={drone.z:.2f}, kf_estimate={kf.estimate:.2f}, command={command}")
+    if step<300:
+        print(f"step={step}, target={target}, true_z={drone.z:.2f}, kf_estimate={kf.estimate:.2f}, current_index={current_index}")
