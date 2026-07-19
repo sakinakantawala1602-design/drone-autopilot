@@ -20,3 +20,7 @@ class PIDController:
         self.previous_error=error
 
         return command
+    
+    def reset(self):
+        self.integral = 0
+        self.previous_error = 0
